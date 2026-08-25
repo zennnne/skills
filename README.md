@@ -1,69 +1,72 @@
 # skills
 
-Claude Code skills ที่ผมใช้จริงในงานประจำวัน — เขียนเอง / ปรับจากของคนอื่นจนเข้ามือ
+Claude Code skills I actually use day to day — some written from scratch, some adapted from other people's work until they fit my hands.
 
-แต่ละสกิลคือโฟลเดอร์ที่มี `SKILL.md` (frontmatter `name` + `description` แล้วตามด้วยขั้นตอน) บางตัวมีไฟล์ `reference.md` / `examples.md` / `templates.md` แยกไว้ให้โหลดตอนต้องใช้จริง
+Each skill is a folder containing a `SKILL.md` (frontmatter `name` + `description`, then the steps). Some also ship `reference.md` / `examples.md` / `templates.md`, kept separate so they're only loaded when actually needed.
 
 ## Install
 
-ก็อปเฉพาะตัวที่อยากใช้ไปวางใน skills directory ของตัวเอง:
+Copy just the ones you want into your own skills directory:
 
 ```bash
 git clone https://github.com/zennnne/skills.git
 cp -r skills/skills/deep-research ~/.claude/skills/
 ```
 
-- **ทั้งเครื่อง** → `~/.claude/skills/<name>/SKILL.md`
-- **เฉพาะโปรเจกต์** → `<project>/.claude/skills/<name>/SKILL.md`
+- **Global** → `~/.claude/skills/<name>/SKILL.md`
+- **Per project** → `<project>/.claude/skills/<name>/SKILL.md`
 
-Claude จะหยิบมาใช้เองตาม `description` หรือเรียกตรงๆ ด้วย `/<skill-name>` ก็ได้
+Claude picks a skill up on its own based on its `description`, or you can invoke it directly with `/<skill-name>`.
 
 ## Skills
 
+The **Source** column marks skills that are vendored or adapted from someone else's repo. Anything marked "own" I wrote myself.
+
 ### Coding
 
-| Skill | ทำอะไร |
-|---|---|
-| [`implement-spec`](skills/implement-spec/SKILL.md) | Implement a specification in code. |
-| [`karpathy-guidelines`](skills/karpathy-guidelines/SKILL.md) | Behavioral guidelines to reduce common LLM coding mistakes. |
-| [`find-standards`](skills/find-standards/SKILL.md) | Find how this problem is already solved: standards we could adopt, and the industry's best practices. |
-| [`flashlight`](skills/flashlight/SKILL.md) | Shine a light into a wayfinder map's fog — work one direction now, out of frontier order, or redraw the map itself. |
-| [`grilling-frontend-prototyping`](skills/grilling-frontend-prototyping/SKILL.md) | Converge on a frontend look through rounds of prototypes and grilling verdicts. |
-| [`using-git-worktrees`](skills/using-git-worktrees/SKILL.md) | Ensures an isolated workspace exists via native tools or git worktree fallback — ใช้ตอนเริ่มงาน feature ที่ต้องแยกจาก workspace ปัจจุบัน |
-| [`finishing-a-development-branch`](skills/finishing-a-development-branch/SKILL.md) | ตอน implement เสร็จ เทสต์ผ่านหมด แล้วต้องตัดสินใจว่าจะ merge / PR / cleanup ยังไง |
+| Skill | What it does | Source |
+|---|---|---|
+| [`implement-spec`](skills/implement-spec/SKILL.md) | Implement a specification in code. | own |
+| [`karpathy-guidelines`](skills/karpathy-guidelines/SKILL.md) | Behavioral guidelines to reduce common LLM coding mistakes. | [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) |
+| [`find-standards`](skills/find-standards/SKILL.md) | Find how this problem is already solved: standards we could adopt, and the industry's best practices. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
+| [`flashlight`](skills/flashlight/SKILL.md) | Shine a light into a wayfinder map's fog — work one direction now, out of frontier order, or redraw the map itself. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
+| [`grilling-frontend-prototyping`](skills/grilling-frontend-prototyping/SKILL.md) | Converge on a frontend look through rounds of prototypes and grilling verdicts. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
+| [`using-git-worktrees`](skills/using-git-worktrees/SKILL.md) | Make sure an isolated workspace exists, via native tools or a git worktree fallback — use it when starting feature work that has to stay separate from the current workspace. | [obra/superpowers](https://github.com/obra/superpowers) |
+| [`finishing-a-development-branch`](skills/finishing-a-development-branch/SKILL.md) | For when the implementation is done and tests pass, and you have to decide how to merge / PR / clean up. | [obra/superpowers](https://github.com/obra/superpowers) |
 
 ### Research & writing
 
-| Skill | ทำอะไร |
-|---|---|
-| [`deep-research`](skills/deep-research/SKILL.md) | Multi-pass research: สัมภาษณ์เพื่อหุบ scope ก่อน แล้วกระจาย sub-agent ไปขุดแต่ละคำถามย่อยพร้อมกัน จบด้วย synthesis เข้าคลังความรู้ |
-| [`extracting-youtube-transcript`](skills/extracting-youtube-transcript/SKILL.md) | ดึง transcript เต็มของคลิป YouTube ผ่าน Playwright MCP (กดปุ่ม Show transcript แล้วอ่าน panel) |
-| [`code-story`](skills/code-story/SKILL.md) | Build a wizard-style HTML page that teaches how and why a change works. |
-| [`applying-3-act-structure`](skills/applying-3-act-structure/SKILL.md) | ใช้โครง 3 องก์ (Setup / Confrontation / Resolution) วางแผนหรือวินิจฉัยเรื่องเล่า — นิยาย บท คอนเทนต์ |
-| [`report-thai-business`](skills/report-thai-business/SKILL.md) | แปลงาน internal-audit / risk จากอังกฤษเป็นไทยแบบที่ผู้บริหารลูกค้ารับได้เลยโดยไม่ต้องแก้ |
+| Skill | What it does | Source |
+|---|---|---|
+| [`deep-research`](skills/deep-research/SKILL.md) | Multi-pass research: interview first to narrow the scope, then fan out sub-agents to dig into each sub-question in parallel, and finish by synthesizing everything into the knowledge base. | own |
+| [`extracting-youtube-transcript`](skills/extracting-youtube-transcript/SKILL.md) | Pull the full transcript of a YouTube video through Playwright MCP (click "Show transcript", then read the panel). | own |
+| [`code-story`](skills/code-story/SKILL.md) | Build a wizard-style HTML page that teaches how and why a change works. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
+| [`applying-3-act-structure`](skills/applying-3-act-structure/SKILL.md) | Use three-act structure (Setup / Confrontation / Resolution) to plan or diagnose a narrative — fiction, screenplay, content. | own |
+| [`report-thai-business`](skills/report-thai-business/SKILL.md) | Turn internal-audit / risk writing from English into Thai that a client executive can accept as-is, with no editing. | own |
 
 ### Claude Code housekeeping
 
-สกิลกลุ่มนี้ผูกกับ setup ส่วนตัวของผม (`~/.claude/session_log/YYYY/MM/`, memory layout, plugin marketplace) — เอาไปใช้ได้แต่ต้องแก้ path ให้ตรงกับของตัวเองก่อน
+These are tied to my personal setup (`~/.claude/session_log/YYYY/MM/`, memory layout, plugin marketplace) — feel free to take them, but fix the paths to match yours first.
 
-| Skill | ทำอะไร |
-|---|---|
-| [`auditing-claude-md`](skills/auditing-claude-md/SKILL.md) | ตรวจ CLAUDE.md ที่มีอยู่ แล้วจัดทุกบรรทัดเป็น keep / cut / move-to-skill |
-| [`test-a-skill`](skills/test-a-skill/SKILL.md) | เทสต์สกิลภาคสนาม — รันสดใน agent session ที่ไม่มี context แล้วเอาสิ่งที่มันสะดุดมาแก้ |
-| [`session-summary`](skills/session-summary/SKILL.md) | เติม placeholder ใน daily session log โดยอ่าน transcript `.jsonl` ของ session นั้นมาสรุป |
-| [`session-index`](skills/session-index/SKILL.md) | ทำสารบัญรายเดือน — รวบ title / date / status / จำนวน mistake ของทุก session ในเดือนนั้นเป็นตาราง |
-| [`cleaning-sessions`](skills/cleaning-sessions/SKILL.md) | ลบ transcript (JSONL) + โฟลเดอร์ tool-result ที่เก่ากว่า N วัน คืนพื้นที่ดิสก์ |
-| [`updating-plugins`](skills/updating-plugins/SKILL.md) | อัปเดต plugin ทุกตัวให้เป็นล่าสุด หา plugin เองจาก `settings.json` |
-| [`automating-afk-agent-queues`](skills/automating-afk-agent-queues/SKILL.md) | วิธีต่อ AFK coding agent เข้ากับ task queue ให้ทำงานตาม event แทนการวน idle loop |
+| Skill | What it does | Source |
+|---|---|---|
+| [`auditing-claude-md`](skills/auditing-claude-md/SKILL.md) | Audit an existing CLAUDE.md and sort every line into keep / cut / move-to-skill. | own |
+| [`test-a-skill`](skills/test-a-skill/SKILL.md) | Field-test a skill — run it live in an agent session with no context, then fix whatever it tripped over. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
+| [`session-summary`](skills/session-summary/SKILL.md) | Fill the placeholders in the daily session log by reading and summarizing that session's `.jsonl` transcript. | own |
+| [`session-index`](skills/session-index/SKILL.md) | Build a monthly table of contents — title / date / status / mistake count for every session that month, as one table. | own |
+| [`cleaning-sessions`](skills/cleaning-sessions/SKILL.md) | Delete transcripts (JSONL) and tool-result folders older than N days to reclaim disk space. | own |
+| [`updating-plugins`](skills/updating-plugins/SKILL.md) | Update every plugin to the latest version, discovering the plugins itself from `settings.json`. | own |
+| [`automating-afk-agent-queues`](skills/automating-afk-agent-queues/SKILL.md) | How to wire an AFK coding agent to a task queue so it works off events instead of spinning in an idle loop. | own |
 
 ## Notes
 
-- สกิลบางตัวมีโฟลเดอร์ `agents/openai.yaml` ติดมาด้วย — เป็น export สำหรับ agent runner อื่น ไม่จำเป็นต่อการใช้กับ Claude Code
-- อยากรู้วิธีเขียนสกิลให้ดี แนะนำ [`writing-for-agents`](https://github.com/mattpocock/skills) ของ Matt Pocock
+- A few skills ship an `agents/openai.yaml` folder alongside them — that's an export for other agent runners and isn't needed to use them with Claude Code.
 
-## License
+## Installed as plugins, not vendored here
 
-ยังไม่ได้ใส่ license ค่ะ — สกิลในนี้ไม่ได้เขียนเองทั้งหมด บางตัว vendored
-หรือ adapt มาจากที่อื่น (เช่น `karpathy-guidelines` มาจาก
-[forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills))
-ตัวไหนมีเครดิตต้นทาง จะเขียนไว้ในไฟล์นั้นเอง
+Two skill sets I use are installed whole as Claude Code plugins, so they don't live in this repo — install them from their marketplace instead of copying folders:
+
+| Plugin | Skills | Where from |
+|---|---|---|
+| `9arm-skills` | `debug-mantra`, `post-mortem`, `scrutinize`, `management-talk` | [thananon/9arm-skills](https://github.com/thananon/9arm-skills) |
+| `mattpocock-skills` | `writing-for-agents`, `tdd`, `code-review`, `diagnosing-bugs`, `research`, `domain-modeling`, `codebase-design`, `grilling`, `prototype`, `wizard`, `resolving-merge-conflicts` | [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) |
