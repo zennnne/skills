@@ -63,4 +63,7 @@ Claude จะหยิบมาใช้เองตาม `description` หร�
 
 ## License
 
-MIT — หยิบไปใช้ ไปแก้ ได้เลย ไม่ต้องขอ
+ยังไม่ได้ใส่ license ค่ะ — สกิลในนี้ไม่ได้เขียนเองทั้งหมด บางตัว vendored
+หรือ adapt มาจากที่อื่น (เช่น `karpathy-guidelines` มาจาก
+[forrestchang/andrej-karpathy-skills](https://github.com/forrestchang/andrej-karpathy-skills))
+ตัวไหนมีเครดิตต้นทาง จะเขียนไว้ในไฟล์นั้นเอง
