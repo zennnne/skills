@@ -8,7 +8,6 @@ Condensing is cheap; the run around it is not. A whole measured run of this skil
 
 - Triage first: run `--context` on every part of the episode before reading any timeline in full. It is cheap, and it tells you which transcript carries the damage.
 - Read in full the transcript that carries the ask and the one that crossed budget. Skim the rest for the rows their `--context` reports named.
-- Redirect anything over ~30 KB to a file and read it in slices; a condense that comes back inline at 50 KB has already eaten a third of the pass.
 - Keep `--row` for rows you can name a reason for. Rationing it down to one is how a diagnosis ends up resting on inference.
 
 ## What a call cost
