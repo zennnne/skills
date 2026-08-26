@@ -50,6 +50,7 @@ These are tied to my personal setup (`~/.claude/session_log/YYYY/MM/`, memory la
 
 | Skill | What it does | Source |
 |---|---|---|
+| [`esuna`](skills/esuna/SKILL.md) | Retrospective on a past session — diagnose the agent's environment (steering files, hooks, skills, tooling) for the standing conditions that made it go wrong, and propose the edits that fix them. Ships `filter_transcript.py` to condense a transcript into a timeline + context report. | own |
 | [`auditing-claude-md`](skills/auditing-claude-md/SKILL.md) | Audit an existing CLAUDE.md and sort every block into keep / shrink / move-to-skill / cut. | own |
 | [`test-a-skill`](skills/test-a-skill/SKILL.md) | Field-test a skill — run it live in an agent session with no context, then fix whatever it tripped over. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
 | [`session-summary`](skills/session-summary/SKILL.md) | Fill the placeholders in the daily session log by reading and summarizing that session's `.jsonl` transcript. | own |
