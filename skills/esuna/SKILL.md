@@ -3,7 +3,7 @@ name: esuna
 description: Cure a past session's status ailments — the standing conditions in the agent's environment that made it go wrong and will again.
 disable-model-invocation: true
 argument-hint: "[day/topic of the session]"
-allowed-tools: "Read Glob Grep Bash Edit Write Skill"
+allowed-tools: "Read, Glob, Grep, Bash, Edit, Write, Skill"
 ---
 
 The user has asked for a **retrospective** on a past coding session. You are diagnosing the agent's **environment** — steering files, hooks, skills, custom tooling — for the conditions that caused mistakes in that session and would cause them again in the next one. You are not reviewing the code that was written.
@@ -18,20 +18,11 @@ The user has asked for a **retrospective** on a past coding session. You are dia
 
    The transcripts under `~/.claude/projects/` are the only complete record of what happened. Resolve from the listing.
 
-   An **episode** — the work the user has in mind — is often more than one transcript, and the opening ask is a weak way to find it. Read the listing for all three shapes:
-
-   - **Contiguous**: a session marked `(cont.)` began moments after the previous one in that project. It is the same episode resumed, so condense every part of it. Its opening ask is an answer to a question asked in the previous transcript (the Thai for "Option B then, local is fine"), which matches no topic at all — a resumed session is found by its neighbour, never by its ask.
-   - **Concurrent**: sessions whose times overlap the target's. Two in one project were editing each other's files, so when the target tripped over a file that moved under it, the cause is in the other transcript. Overlapping sessions in *different* projects share one thing anyway — the account's rate limit — and that is how a session comes to sit blocked for two hours in the middle of a task. Run `--context` on each overlapping session and hold the peaks against each other; step 4 reports what you find there under **Git gud!**. Then decide what each one is to the episode: a session that touched the target's repo, files, or branch is **part of it** - condense it in full, because the target's confusion is explained inside it. One that merely ran at the same time is **background** - cite its peak and its ask, and leave it uncondensed.
-   - **Duplicate**: when two sessions open with the same ask, discriminate on duration and on whether the agent stopped to ask the user something. Before reading any delta, scan each one's user turns for the first that redirects: a slash command run twice on different arguments (`teach lesson 22`, then `teach lesson 21B` six minutes in) opens identically and is not the same work, and every discriminator above fires on it. The same task genuinely retried later is the cheapest diagnostic available — condense both and read the delta.
+   An **episode** — the work the user has in mind — is often more than one transcript, and an mtime that looks like a fix is often not one. [`EPISODE-RESOLUTION.md`](EPISODE-RESOLUTION.md) carries both: the three shapes an episode takes across transcripts — **Contiguous**, **Concurrent**, **Duplicate** — and the two touches that masquerade as a fix. Read it when the listing shows a session marked `(cont.)`, sessions whose times overlap the target's, or two sessions opening with the same ask; and again before you mark any candidate already-fixed.
 
    When several sessions genuinely are alternatives, show them — time, duration, project, tool-call count, opening ask — and let the user pick before going further.
 
    Then check the mtime of the steering files, skills, and scripts the session touched, against the end of the episode's **last** transcript. A file modified after that was probably already fixed in response to the session, and the live question becomes whether the fix holds — a retrospective on a problem the user solved a week ago is a report he cannot act on.
-
-   An mtime says a file changed, never who changed it or why, and two kinds of touch masquerade as a fix:
-
-   - **The session's own writes.** A session that edits its steering files in its closing rows stamps every one of them after its own start. Cross-check each mtime against the Edit and Write rows in the timeline; a file the session wrote itself is evidence about that session, not a repair of it.
-   - **Incidental touches.** A file stamped today, mid-retrospective, was probably touched by whatever you are running right now. Read the file and see whether the fix is actually in it before marking anything already-fixed.
 
 2. Condense every transcript in the episode with `python filter_transcript.py <path>` from this skill's directory.
 
@@ -72,15 +63,7 @@ The user has asked for a **retrospective** on a past coding session. You are dia
 
    The session decides which categories are live. A session that produced no code — teaching, research, planning — retires **Coding standards** along with the Implementation vs Review reference below; skip both.
 
-4. Call the Skill tool with `mattpocock-skills:writing-for-agents` before writing any of this step. It is the reference for every document an agent consumes, which is what all of these candidates propose to change.
-
-   It earns the early call by deciding **what a candidate may propose**, before the wording of one is at stake. Take these from it now:
-
-   - Every candidate names the lever it pulls — a context pointer, a leading word, a disclosure, a pruned no-op — and a candidate that cannot name one is a wish rather than an edit.
-   - Adding is not the only move. Its **no-op** test, its **sediment**, and its single-source-of-truth rule turn "this file is bloated" into a candidate that deletes, which is the shape most of step 3's categories actually want.
-   - The **two loads** price a candidate: what it costs every future session against what it saves. That is the same arithmetic as the severity order below, so run it once, here.
-
-   The rest of it — completion criteria, negation, leading words as phrasing — governs the diff you draft once he picks, which is why it stays loaded rather than being called twice.
+4. Call the Skill tool with `mattpocock-skills:writing-for-agents` before writing any of this step. It is the reference for every document an agent consumes, which is what all of these candidates propose to change, and it decides **what a candidate may propose** before the wording of one is at stake. Take three things from it now: the **lever** each candidate pulls, since one that cannot name a lever is a wish rather than an edit; its **no-op** test and its **sediment**, which turn "this file is bloated" into a candidate that deletes; and its **two loads**, which price a candidate on the same arithmetic as the severity order below. It stays loaded rather than being called twice, because the rest of it governs the diff you draft once he picks.
 
    Present these candidates to the user in Thai — this report is the one part of the run he reads, and he reads it in the language he asked in. Filenames, flags, row numbers and quoted lines stay verbatim in whatever language they are written in on disk.
 
