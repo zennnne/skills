@@ -1,17 +1,6 @@
 ---
 name: auditing-claude-md
-description: >
-  Audit an existing CLAUDE.md file and classify each block into: keep, shrink,
-  move-to-skill, or cut. Applies the minimal-CLAUDE.md principle: only content
-  the agent genuinely cannot discover for itself belongs here, and reference
-  that is wanted but bulky moves down behind a pointer rather than out. Surveys
-  hooks, existing skills, and inbound references first, then proposes each
-  change with pros/cons, collects approvals, and applies them in one pass. Use
-  when the user asks to review, trim, or evaluate their CLAUDE.md, check for
-  rot, or reduce per-request token cost. User must invoke explicitly — never
-  auto-runs.
-  Keywords: audit claude.md, review claude.md, trim claude.md, claude.md bloat,
-  init cleanup.
+description: Audit a CLAUDE.md and classify every block keep / shrink / move-to-skill / cut.
 disable-model-invocation: true
 ---
 
@@ -172,13 +161,3 @@ After all items are answered, apply in one pass:
    - Inbound references repaired: N (list the files)
    - Size reduction: the Phase 0 baseline and the new `wc -l` / `wc -m`, with
      the percentage and the unit named.
-
----
-
-## Instruction budget reminder
-
-Every line in CLAUDE.md spends from a finite instruction budget on every
-request, whether or not it is relevant to that request. The bar for the Keep
-bucket: the agent cannot function correctly without this and cannot find it on
-its own — or the line is a pointer whose whole job is to send the agent
-somewhere else.
