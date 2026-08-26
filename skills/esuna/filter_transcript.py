@@ -3,6 +3,7 @@
 Usage:
   python filter_transcript.py <transcript.jsonl>            condense one session
   python filter_transcript.py <transcript.jsonl> --row N     print row N in full
+  python filter_transcript.py <path> --row N --tail          ... last 2000 chars only
   python filter_transcript.py <transcript.jsonl> --context   measured window report
   python filter_transcript.py --day <YYYY-MM-DD> [more...]   list those days' sessions
   python filter_transcript.py --day <YYYY-MM-DD..YYYY-MM-DD> list a range of days
@@ -36,7 +37,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# Windows consoles default to cp1252, which cannot encode Thai text or the
+# Windows consoles default to cp1252, which cannot encode non-ASCII text or the
 # ellipsis this script emits.
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -48,6 +49,11 @@ MAX_TURN_CHARS = 400
 # budget on a leading `cd` and hides the only thing worth reading.
 WIDE_KEYS = {"command", "prompt", "content", "new_string", "old_string"}
 MAX_WIDE_CHARS = 300
+
+# A path identifies itself at its end - the filename - and shares its head with
+# every other path in the project. Clipping the tail off leaves rows that write
+# different files looking identical, so these clip from the middle instead.
+PATH_KEYS = {"file_path", "path", "notebook_path", "filePath"}
 
 # Sessions this far apart in one project are one episode split across a
 # boundary rather than two separate asks.
@@ -70,6 +76,15 @@ IMAGE_TOKENS_UNKNOWN = IMAGE_TOKEN_CAP
 def clip(text, limit):
     text = " ".join(str(text).split())
     return text if len(text) <= limit else text[:limit] + "…"
+
+
+def clip_path(text, limit):
+    """Keep both ends of a path, dropping the middle."""
+    text = " ".join(str(text).split())
+    if len(text) <= limit:
+        return text
+    tail = max(limit // 2, limit - 30)
+    return text[:limit - tail] + "…" + text[-tail:]
 
 
 def strip_cd(command):
@@ -96,7 +111,8 @@ def describe_input(value):
         if key == "command" and isinstance(raw, str):
             text = strip_cd(text)
         limit = MAX_WIDE_CHARS if key in WIDE_KEYS else MAX_VALUE_CHARS
-        parts.append(f"{key}={clip(text, limit)}")
+        shorten = clip_path if key in PATH_KEYS else clip
+        parts.append(f"{key}={shorten(text, limit)}")
     return "  ".join(parts)
 
 
@@ -165,6 +181,9 @@ def gap(previous, moment):
 
 
 def read_entries(path):
+    if not Path(path).is_file():
+        sys.exit(f"no transcript at {path}\n"
+                 "List a day with --day YYYY-MM-DD to get the path to copy.")
     with open(path, encoding="utf-8") as handle:
         for line in handle:
             line = line.strip()
@@ -502,7 +521,7 @@ def context_report(path):
         print(f"+{size:>8,}  rows {span:<9}  {describe_rows(rows, first - 1, last)}")
 
 
-def show_row(path, number):
+def show_row(path, number, tail=0):
     rows, results, _ = build(path, keep_text=True)
     if not 1 <= number <= len(rows):
         sys.exit(f"row {number} is out of range: this transcript has {len(rows)} rows")
@@ -520,11 +539,19 @@ def show_row(path, number):
     result = results.get(row["id"], {})
     print(f"# {row['name']}{'  ERROR' if result.get('error') else ''}\n")
     print("## Input\n")
-    print(json.dumps(row["raw_input"], ensure_ascii=False, indent=2))
+    written = json.dumps(row["raw_input"], ensure_ascii=False, indent=2)
+    if tail and len(written) > tail:
+        print(f"[{len(written) - tail} chars of input omitted]")
+        written = written[:tail]
+    print(written)
     print("\n## Result\n")
     if result.get("images"):
         print(f"[{result['images']} image(s), ~{result['tokens']} tokens]")
-    print(result.get("text", ""))
+    text = result.get("text", "")
+    if tail and len(text) > tail:
+        print(f"[first {len(text) - tail} chars omitted; --row alone prints all]")
+        text = text[-tail:]
+    print(text)
 
 
 def first_moment(path):
@@ -628,7 +655,7 @@ def list_days(arguments):
 
         # Rows carry a clock time only, so across a range the day a session
         # belongs to is otherwise recoverable only by watching the clock wrap
-        # backwards. The weekday is here because the user names his sessions
+        # backwards. The weekday is here because the user names sessions
         # relative to today ("last Saturday"), never by date.
         day = info["start"].astimezone()
         if day.strftime("%Y-%m-%d") != current_day:
@@ -651,11 +678,13 @@ USAGE = ("usage: python filter_transcript.py <transcript.jsonl>"
          "               condense one session\n"
          "       python filter_transcript.py <transcript.jsonl> --row N"
          "       print row N in full\n"
+         "       python filter_transcript.py <transcript.jsonl> --row N --tail"
+         "  ... last 2000 chars of the result\n"
          "       python filter_transcript.py <transcript.jsonl> --context"
          "       measured window report\n"
          "       python filter_transcript.py --day <YYYY-MM-DD>[..<YYYY-MM-DD>]"
          " [more days]  list sessions\n"
-         "\nThose four are every mode there is.")
+         "\nThose are every mode there is.")
 
 if __name__ == "__main__":
     arguments = sys.argv[1:]
@@ -672,9 +701,12 @@ if __name__ == "__main__":
         list_days(arguments[1:])
     elif len(arguments) == 2 and arguments[1] == "--context":
         context_report(arguments[0])
-    elif len(arguments) == 3 and arguments[1] == "--row":
+    elif len(arguments) in (3, 4) and arguments[1] == "--row":
+        if len(arguments) == 4 and arguments[3] != "--tail":
+            sys.exit(f"unknown flag: {arguments[3]}\n\n{USAGE}")
         try:
-            show_row(arguments[0], int(arguments[2]))
+            show_row(arguments[0], int(arguments[2]),
+                     tail=2000 if len(arguments) == 4 else 0)
         except ValueError:
             sys.exit("--row takes a row number")
     elif len(arguments) == 1:

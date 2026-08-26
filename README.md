@@ -48,6 +48,14 @@ The **Source** column marks skills that are vendored or adapted from someone els
 
 These are tied to my personal setup (`~/.claude/session_log/YYYY/MM/`, memory layout, plugin marketplace) — feel free to take them, but fix the paths to match yours first.
 
+> **Heads up on [`esuna`](skills/esuna/SKILL.md)** — it reads transcripts straight off disk, so a few things are hardcoded to my machine. Expect to edit these before it runs anywhere else:
+>
+> - `~/.claude/projects/*/*.jsonl` — where `filter_transcript.py` goes looking for transcripts.
+> - `C--Users-User` — my home-directory project slug, named in `SKILL.md` as the "global scope" memory directory. Yours will be a slug of your own home path.
+> - `CONTEXT_BUDGET = 150_000` in `filter_transcript.py` — my own bar for what fits in one task, not a ceiling the harness enforces. Set it to whatever you count as a full window.
+> - It calls two skills from the `mattpocock-skills` plugin (`writing-for-agents`, `code-review`). Without that plugin installed, swap those references for your own equivalents.
+> - `HARNESS_PREFIXES` in `filter_transcript.py` recognises Claude Code's system messages by exact string prefix — if a future release rewords them, those rows get misread as the user talking.
+
 | Skill | What it does | Source |
 |---|---|---|
 | [`esuna`](skills/esuna/SKILL.md) | Retrospective on a past session — diagnose the agent's environment (steering files, hooks, skills, tooling) for the standing conditions that made it go wrong, and propose the edits that fix them. Ships `filter_transcript.py` to condense a transcript into a timeline + context report. | own |
