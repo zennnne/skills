@@ -22,7 +22,9 @@ The user has asked for a **retrospective** on a past coding session. You are dia
 
    [`EPISODE-RESOLUTION.md`](EPISODE-RESOLUTION.md) carries the shapes an **episode** takes across transcripts — **Contiguous**, **Concurrent**, **Duplicate**, **Sequential** — and the touches that masquerade as a fix. Read it when the listing shows a session marked `(cont.)`, sessions whose times overlap the target's, two sessions opening with the same ask, or an earlier session in the same project whose output the target consumed; and again before you mark any candidate already-fixed.
 
-2. Run `--context` on every transcript in the episode first: it is cheap, and it names the one carrying the damage. Then condense that one — `python filter_transcript.py <path> > <file>` from this skill's directory — and read its timeline, opening any row worth it with `--row N`.
+2. Read [`COST-AND-WINDOW.md`](COST-AND-WINDOW.md) before condensing anything. It carries the `--context` triage that names which transcript in the episode is carrying the damage, what a tool call cost the session, and how to spend your own window across the episode — the totals table's sent column is where a rewritten file or a dispatched brief shows up, and an episode of one transcript hides those just as well as an episode of four.
+
+   Then condense the transcript the triage named — `python filter_transcript.py <path> > <file>` from this skill's directory — and read its timeline, opening any row worth it with `--row N`.
 
    The condensed timeline interleaves the user's turns, the agent's replies, and the tool calls, each row carrying the time elapsed since the row above it, then totals per tool. `USER` rows are the human, including the slash command they typed; `SYS` rows are the harness talking to the agent.
 
@@ -37,8 +39,6 @@ The user has asked for a **retrospective** on a past coding session. You are dia
    - A long gap on a user row is the human away from the keyboard.
    - A long gap on an agent row whose previous row errored, or that repeats the call above it, is the harness blocked — a permission classifier timing out, a prompt waiting. Open the row; the agent did nothing for that time.
    - Every other gap on an agent row is the agent working.
-
-   [`COST-AND-WINDOW.md`](COST-AND-WINDOW.md) carries what a tool call cost the session and how to spend your own window across an episode. Read it before condensing anything — the totals table's sent column is where a rewritten file or a dispatched brief shows up, and an episode of one transcript hides those just as well as an episode of four.
 
    With the timeline read, check the mtime of every steering file, skill, script and memory directory the episode **read, wrote, or should have had and did not**, against the end of its last transcript. The set is wider than the files the session touched: a skill that steered it wrong and a memory directory that stayed empty are both conditions the session never wrote to. A file modified after the episode ended was probably already fixed in response to it, and the live question becomes whether the fix holds — a retrospective on a problem the user solved a week ago is a report they cannot act on.
 
