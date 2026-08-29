@@ -1,5 +1,5 @@
 ---
-name: esuna
+name: suzu
 description: Cure a past session's status ailments — the standing conditions in the agent's environment that made it go wrong and will again.
 disable-model-invocation: true
 argument-hint: "[day/topic of the session]"

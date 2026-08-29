@@ -1,6 +1,6 @@
 # Cost and window
 
-Reference for step 2 of `esuna`. Two things live here: how to spend your own context window across an episode, and what a tool call cost the session under diagnosis.
+Reference for step 2 of `suzu`. Two things live here: how to spend your own context window across an episode, and what a tool call cost the session under diagnosis.
 
 ## Spending your own window
 

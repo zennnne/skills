@@ -1,6 +1,6 @@
 # Episode resolution
 
-Reference for step 1 of `esuna`. Two things live here: the shapes an **episode** takes across transcripts, and the touches that masquerade as a fix when you read an mtime.
+Reference for step 1 of `suzu`. Two things live here: the shapes an **episode** takes across transcripts, and the touches that masquerade as a fix when you read an mtime.
 
 ## Episode shapes
 
