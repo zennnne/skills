@@ -33,6 +33,7 @@ The **Source** column marks skills that are vendored or adapted from someone els
 | [`grilling-frontend-prototyping`](skills/grilling-frontend-prototyping/SKILL.md) | Converge on a frontend look through rounds of prototypes and grilling verdicts. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
 | [`using-git-worktrees`](skills/using-git-worktrees/SKILL.md) | Make sure an isolated workspace exists, via native tools or a git worktree fallback — use it when starting feature work that has to stay separate from the current workspace. | [obra/superpowers](https://github.com/obra/superpowers) |
 | [`finishing-a-development-branch`](skills/finishing-a-development-branch/SKILL.md) | For when the implementation is done and tests pass, and you have to decide how to merge / PR / clean up. | [obra/superpowers](https://github.com/obra/superpowers) |
+| [`show-me`](skills/show-me/SKILL.md) | Explain the thing under discussion as a picture instead of a paragraph — pseudocode, call tree, component tree, file tree, Mermaid, a shaped `diff`, or one focused HTML page. | [humanlayer/skills](https://github.com/humanlayer/skills) |
 
 ### Research & writing
 
@@ -70,6 +71,7 @@ These are tied to my personal setup (`~/.claude/session_log/YYYY/MM/`, memory la
 ## Notes
 
 - A few skills ship an `agents/openai.yaml` folder alongside them — that's an export for other agent runners and isn't needed to use them with Claude Code.
+- `show-me` is vendored with two edits: `disable-model-invocation: true`, so it only runs when I type `/show-me`, and `Bash(open …)` → `Bash(start "" …)` in the HTML step, because the original assumes macOS.
 
 ## Installed as plugins, not vendored here
 
