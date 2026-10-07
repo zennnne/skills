@@ -26,7 +26,6 @@ The **Source** column marks skills that are vendored or adapted from someone els
 
 | Skill | What it does | Source |
 |---|---|---|
-| [`deleting-specs`](skills/deleting-specs/SKILL.md) | Take down a finished feature's spec and tickets once the build has landed — gate on every ticket being done, rescue decisions that live nowhere else, fix dangling pointers, then delete (local `.scratch/`) or close (real tracker). | own |
 | [`karpathy-guidelines`](skills/karpathy-guidelines/SKILL.md) | Behavioral guidelines to reduce common LLM coding mistakes. | [multica-ai/andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) |
 | [`find-standards`](skills/find-standards/SKILL.md) | Find how this problem is already solved: standards we could adopt, and the industry's best practices. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
 | [`flashlight`](skills/flashlight/SKILL.md) | Shine a light into a wayfinder map's fog — work one direction now, out of frontier order, or redraw the map itself. | [will-ness-ai/skills](https://github.com/will-ness-ai/skills) |
@@ -72,7 +71,6 @@ These are tied to my personal setup (`~/.claude/session_log/YYYY/MM/`, memory la
 
 - A few skills ship an `agents/openai.yaml` folder alongside them — that's an export for other agent runners and isn't needed to use them with Claude Code.
 - `show-me` is vendored with two edits: `disable-model-invocation: true`, so it only runs when I type `/show-me`, and `Bash(open …)` → `Bash(start "" …)` in the HTML step, because the original assumes macOS.
-- `deleting-specs` is the clean-up end of the `mattpocock-skills` spec flow (`/to-spec` → `/to-tickets` → `/implement`) and calls `/domain-modeling` to record orphan decisions, so it assumes that plugin is installed. It has `disable-model-invocation: true` — run it yourself with `/deleting-specs <feature>`.
 
 ## Installed as plugins, not vendored here
 
