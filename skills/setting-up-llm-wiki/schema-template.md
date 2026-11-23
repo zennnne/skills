@@ -38,13 +38,14 @@ Every wiki page:
 
 ### Ingest
 
-1. Read the new source in `raw/`.{{ If supervised: Discuss the key takeaways with zen before writing.}} For a source with images (web snapshot, PDF, slides), read the text first, then open each image the text refers to, one at a time; reading a file returns its text only.
+1. Read the new source in `raw/`.{{ If supervised: Discuss the key takeaways with zen before writing.}} For a source with images (web snapshot, PDF, slides), read the text first, then open each **evidence image**, one at a time: a table, chart, diagram, or screenshot that carries a fact the text leaves out. Logos, photos, and figures the text already spells out stay closed. Reading a file returns its text only.
 2. Write or update every page the source touches: summary page, plus entity/concept pages it adds to or contradicts. Where it contradicts an existing claim, keep both with sources and flag it.
 3. [module: overview] When the source extends or contradicts the big picture, revise `wiki/overview.md`.
-4. Update `## Related` links (both directions) and `index.md`.
+4. Add the outbound links to each touched page's `## Related`, and update `index.md`. Back-links are the script's job: step 6 writes them.
 5. Append to `log.md`.
+6. Run `python lint.py {{lint args}} --fix`. It writes every missing back-link into the target page's `## Related` and lists each as `[fixed]`; a back-link that deserves a one-line note on how the pages relate gets that note now.
 
-Done when every touched page is updated, linked both ways, indexed, and logged, and `python lint.py {{lint args}}` reports no `broken`, `unindexed`, or `one-way` findings.
+Done when every touched page is updated, indexed, and logged, and the step-6 run reports no `broken`, `unindexed`, or `one-way` findings.
 
 ### Query
 
@@ -73,9 +74,14 @@ Each lesson: `## <n>. <short title>`, then **Rule** (the target behaviour, phras
 
 Run when zen asks, or at session start when the newest `lint` log entry is over {{N}} days old. Two passes:
 
-**Mechanical**: run `python lint.py {{lint args, e.g. --pages "wiki/**/*.md" --hub wiki/overview.md --stale fast=90 medium=365 slow=1095}}` from the wiki root. It reports `broken` (link to a missing file), `unindexed`, `orphan`, `one-way` (hub pages given by `--hub` are exempt from these two), and with time staleness `header` (missing AS_OF/VOLATILITY) and `stale`. Fix every `broken`, `unindexed`, `one-way`, and `header` finding, then rerun until those kinds are gone.
+**Mechanical**: run `python lint.py {{lint args, e.g. --pages "wiki/**/*.md" --hub wiki/overview.md --stale fast=90 medium=365 slow=1095}} --fix --scope --full-due {{M}}` from the wiki root. It reports `broken` (link to a missing file), `unindexed`, `orphan`, `one-way` (hub pages given by `--hub` are exempt from these two; `--fix` writes the missing back-links and lists them as `[fixed]`), `index-load` (`index.md` past 150 entries), and with time staleness `header` (missing AS_OF/VOLATILITY) and `stale`. Fix every `broken`, `unindexed`, and `header` finding, then rerun until those kinds are gone. On `index-load`, propose to zen splitting the index in two tiers: `index.md` keeps one line per page type linking `wiki/<type>/_index.md`, and each `_index.md` holds that type's page lines (`lint.py` already counts pages listed there as indexed).
 
-**Judgment**: read every page for:
+**Scope**: the same run prints the judgment scope, read from the newest `lint` entry in `log.md`:
+
+- **full**: the wiki has under 50 pages, or no full lint is logged yet. Scope is every page and every `lessons/` file.
+- **incremental**: scope is the pages changed since the last lint plus every page linking to or linked from them, and the `lessons/` files changed since then. A `full lint due` line ({{M}} days since the last full lint) goes to zen as a reminder; the full lint runs when zen asks for it.
+
+**Judgment**: read every `[scope]` file for:
 
 - **Contradictions** — two pages disagreeing on a fact. [module: status staleness] Two `canon` statements that cannot both hold are the top finding.
 - **Missing pages** — a concept mentioned on 2+ pages with no page of its own. Create them.
@@ -83,9 +89,10 @@ Run when zen asks, or at session start when the newest `lint` log entry is over 
 - **Gaps** — questions the wiki cannot answer yet; suggest sources or questions to fill them.
 - [module: lessons] **Lesson sediment** — lessons that overlap (merge them), contradict (ask zen which holds), or guard against something that no longer happens (propose deleting).
 - [module: overview] **Overview drift** — `wiki/overview.md` no longer matching the pages.
-- **Index load** — without the search module: `index.md` past a few hundred entries → propose adding it.
 
-Report stale pages, contradictions, unresolved orphans, and gaps to zen as a list. Done when the script's fixable kinds are gone, every judgment check has run on every page, and the log has a `lint` entry naming each finding.
+When zen asks for a full lint, the scope is every page and every `lessons/` file, whatever the script printed.
+
+Report stale pages, contradictions, unresolved orphans, and gaps to zen as a list. Done when the script's fixable kinds are gone, every judgment check has run on every file in scope, and the log has a `lint | full` or `lint | incremental` entry naming each finding.
 
 ## Web capture [module: web capture]
 
@@ -93,7 +100,7 @@ Web sources enter `raw/` as markdown snapshots, never as bare URLs, so a dead li
 
 ## Search [module: search]
 
-`index.md` is the entry point while it stays readable in one pass. Once it stops being enough (roughly a few hundred pages, or queries that keep missing pages that exist), query the wiki through {{search tool, e.g. qmd — local hybrid BM25/vector search with CLI + MCP, https://github.com/tobi/qmd}} first, then open the hits. Keep `index.md` maintained either way; search finds pages, the index shows the wiki's shape.
+`index.md` is the entry point while it stays readable in one pass (split in two tiers on `index-load`). Once it stops being enough (queries that keep missing pages that exist, even with the two-tier index), query the wiki through {{search tool, e.g. qmd — local hybrid BM25/vector search with CLI + MCP, https://github.com/tobi/qmd}} first, then open the hits. Keep `index.md` maintained either way; search finds pages, the index shows the wiki's shape.
 
 ## In-flight work [module: progress]
 
@@ -101,7 +108,7 @@ Web sources enter `raw/` as markdown snapshots, never as bare URLs, so a dead li
 
 - Name it after the task (`progress/batch-ingest-2026-11.md`). One file per task.
 - Keep it current at every milestone, so a fresh context (after compact or a new session) resumes from it alone: **goal** and done-criterion, **done so far**, **tried and failed** (with why), **next step**.
-- At session start, read every file in `progress/` before taking on new work.
+- At session start, read every file in `progress/` and report each task to zen (goal, next step) before taking on new work. Another session may own it, so resume a task only when zen says to.
 - When the task is done: file back any knowledge worth keeping into the wiki (and, with the lessons module, each dead end that taught a reusable rule into `lessons/`), append the `log.md` entry, then delete the progress file. `progress/` is empty whenever nothing is in flight.
 
 ## Log format
@@ -109,7 +116,7 @@ Web sources enter `raw/` as markdown snapshots, never as bare URLs, so a dead li
 ```
 ## [YYYY-MM-DD] ingest | <source title>
 ## [YYYY-MM-DD] file-back | <page> — <what was added>
-## [YYYY-MM-DD] lint | <n> findings — <short list>
+## [YYYY-MM-DD] lint | full|incremental — <n> findings — <short list>
 ## [YYYY-MM-DD] lesson | <craft> #<n> — <short title>
 ## [YYYY-MM-DD] schema | <what changed in this file>
 ```

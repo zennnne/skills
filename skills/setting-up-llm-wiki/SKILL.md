@@ -31,9 +31,10 @@ Ask zen, one question at a time, offering a recommended answer each time:
 5. **Staleness**: what makes a page out of date here. Either **time** (real-world facts age: `AS_OF` + `VOLATILITY` thresholds per page class) or **status** (fiction, canon, specs: each page or section tagged with a status such as canon / past-era / open / retconned, and lint hunts contradictions instead of age).
 6. **Crafts**: does this domain have recurring work whose know-how should build up from zen's corrections (image prompts, scene writing, experiment setup)? Yes → include the `lessons` module, one `lessons/<craft>.md` per craft named.
 7. **Supervision**: ingest one source at a time with zen reviewing, or batch-ingest.
-8. **Long tasks**: will any operation outlive one context window (batch ingest, large refresh, multi-session retcon)? Yes → include the `progress/` module. No → leave it out; add it later if a long task appears.
-9. **Scale**: expected size in a year. Hundreds of pages or more → include the `search` module now; otherwise leave it out and let lint flag when `index.md` stops being enough.
-10. **Location**: wiki root path, and whether it is its own git repo.
+8. **Lint cadence**: days between the session-start lints (`{{N}}`, recommend 7), and days after a full lint before reminding zen of the next one (`{{M}}`, recommend 60).
+9. **Long tasks**: will any operation outlive one context window (batch ingest, large refresh, multi-session retcon)? Yes → include the `progress/` module. No → leave it out; add it later if a long task appears.
+10. **Scale**: expected size in a year. Hundreds of pages or more → include the `search` module now; otherwise leave it out and let lint's `index-load` flag when `index.md` needs splitting.
+11. **Location**: wiki root path, and whether it is its own git repo.
 
 Done when every question has an answer zen has accepted.
 
@@ -52,7 +53,7 @@ lessons/      only with the lessons module: one "# Lessons — <craft>" file per
 progress/     only with the progress module (add .gitkeep)
 ```
 
-Fill [`schema-template.md`](schema-template.md): every `{{placeholder}}` replaced with an interview answer; every `[module: …]` part kept or deleted per the interview, with its tag removed. A tag covers a whole `##` section when it sits in the heading, otherwise the text after it up to the end of its sentence, bullet, or table row. Fill `{{lint args}}` with the `--pages` globs matching the page types, plus `--hub wiki/overview.md` with the overview module (a hub links everywhere by design, so it must not demand back-links), plus `--stale <level>=<days> …` with the time-staleness module.
+Fill [`schema-template.md`](schema-template.md): every `{{placeholder}}` replaced with an interview answer; every `[module: …]` part kept or deleted per the interview, with its tag removed. A tag covers a whole `##` section when it sits in the heading, otherwise the text after it up to the end of its sentence, bullet, or table row. Fill `{{lint args}}` with the `--pages` globs matching the page types, plus `--hub wiki/overview.md` with the overview module (a hub links everywhere by design, so it must not demand back-links), plus `--stale <level>=<days> …` with the time-staleness module, plus `--lessons "lessons/*.md"` with the lessons module (so the judgment scope covers them).
 
 If the wiki root sits inside a repo that already has a `CLAUDE.md`, put the schema at `<wiki-root>/CLAUDE.md` and add one line to the repo's `CLAUDE.md` pointing at it, worded as the trigger: "Read `<wiki-root>/CLAUDE.md` before answering questions about <domain> or editing files under `<wiki-root>/`."
 
