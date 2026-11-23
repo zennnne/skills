@@ -34,7 +34,7 @@ The **Source** column marks skills that are vendored or adapted from someone els
 | [`rsi`](skills/rsi/SKILL.md) | Run an optimisation loop on one feature: agree a contract (metric, ceiling, stop conditions) first, then let a fresh session in a worktree ratchet the metric toward the ceiling unattended. | own |
 | [`show-me`](skills/show-me/SKILL.md) | Explain the thing under discussion as a picture instead of a paragraph — pseudocode, call tree, component tree, file tree, Mermaid, a shaped `diff`, or one focused HTML page. | [humanlayer/skills](https://github.com/humanlayer/skills) |
 
-### Research & writing
+### Research & knowledge
 
 | Skill | What it does | Source |
 |---|---|---|
