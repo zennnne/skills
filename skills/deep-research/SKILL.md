@@ -1,7 +1,7 @@
 ---
 name: deep-research
 disable-model-invocation: true
-description: Conducts thorough multi-pass research on a broad topic by first narrowing scope through an interactive interview, then dispatching parallel sub-agents to investigate sub-questions, and synthesizing findings into a cited Markdown report saved per-topic for later knowledge harvesting. Use when the user asks to deeply research, study in depth, or "เจาะลึก/ศึกษาเชิงลึก" a general subject (e.g. "deep research เรื่อง skincare", "deep-research อุตสาหกรรมอนิเมะ", "research hormone therapy for men"), wants a scoped-down overview of an unfamiliar field, or wants reusable research notes. NOT for single-fact lookups or already-narrow questions answerable by one web search. Keywords: deep research, deep-research, วิจัย, ศึกษาเชิงลึก, เจาะลึก, research report, literature review, รวบรวมข้อมูลเชิงลึก.
+description: 'Conducts thorough multi-pass research on a broad topic by first narrowing scope through an interactive interview, then dispatching parallel sub-agents to investigate sub-questions, and synthesizing findings into a cited Markdown report saved per-topic for later knowledge harvesting. Use when the user asks to deeply research, study in depth, or "เจาะลึก/ศึกษาเชิงลึก" a general subject (e.g. "deep research เรื่อง skincare", "deep-research อุตสาหกรรมอนิเมะ", "research hormone therapy for men"), wants a scoped-down overview of an unfamiliar field, or wants reusable research notes. NOT for single-fact lookups or already-narrow questions answerable by one web search. Keywords: deep research, deep-research, วิจัย, ศึกษาเชิงลึก, เจาะลึก, research report, literature review, รวบรวมข้อมูลเชิงลึก.'
 allowed-tools: "Read Write WebSearch WebFetch AskUserQuestion Agent"
 ---
 
@@ -96,12 +96,11 @@ finance, or safety topics.
    heading per project — add the heading if this project is new, then append:
    `- [<topic>](<project-slug>/<topic-slug>/synthesis.md) — <one-line scope>
    (AS_OF <date>)`
+   Then finish the **Ingest** operation in `C:/Users/User/research/CLAUDE.md`
+   (VOLATILITY header, two-way `## Related` links, `log.md` entry).
 2. Ensure a memory pointer exists: if
    `C:/Users/User/.claude/projects/C--Users-User/memory/reference_research_library.md`
    is missing, create it (type `reference`, pointing at the research folder +
    INDEX.md) and add its line to `MEMORY.md`. If it exists, leave it alone.
 3. Report to the user: synthesis path, notes folder, source count, and 3–5
    headline takeaways (so they sit in conversation context).
-4. Optionally suggest `/harvest-insights` — only for transferable insights from
-   the session (preferences, workflow learnings), not to copy report content
-   into memory; the files are the knowledge base.
